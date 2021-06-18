@@ -21,7 +21,7 @@ font-size: 16px;
 font-weight: bold;
 `;
 
-export const CardButton = styled.TouchableOpacity`
+export const CartButton = styled.TouchableOpacity`
 flex: 1;
 flex-direction: row;
 align-items: center;
@@ -29,7 +29,7 @@ justify-content: space-between;
 padding: 20px 20px;
 `;
 
-export const CardButtonText = styled.Text`
+export const CartButtonText = styled.Text`
 flex: 1;
 color: #f3f9ff;
 font-weight: bold;

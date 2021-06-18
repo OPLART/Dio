@@ -1,7 +1,10 @@
+import 'react-native-gesture-handler';
 import React, { useState } from 'react';
 import { View } from 'react-native';
 
+import FloatingCart from '../../components/FloatingCart'
 import Feather from 'react-native-vector-icons/Feather'
+
 import formatValue from '../../utils/formatValue';
 
 import {
@@ -22,6 +25,20 @@ export default function Catalago() {
   const [products, setProducts] = useState([
     {
       id: '1',
+      title: 'Assinatura Trimestral',
+      image_url:
+      "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
+      price: 150,
+    },
+    {
+      id: '2',
+      title: 'Assinatura Trimestral',
+      image_url:
+      "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
+      price: 150,
+    },
+    {
+      id: '3',
       title: 'Assinatura Trimestral',
       image_url:
       "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
@@ -54,6 +71,7 @@ export default function Catalago() {
           )}
         />
       </ProductContainer>
+      <FloatingCart />
     </Container>
 
   );
