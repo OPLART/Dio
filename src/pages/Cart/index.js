@@ -1,7 +1,10 @@
-import React, {useState} from 'react';
+import React, {useMemo} from 'react';
 import { View } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Feather from 'react-native-vector-icons/Feather';
+
+import * as CartActions from '../../store/modules/cart/actions';
 
 import {
   Container,
@@ -24,43 +27,37 @@ import {
 } from './styles';
 
 import formatValue from '../../utils/formatValue';
+import EmptyCart from '../../components/EmptyCart';
 
 export default function Cart() {
 
-  const [products, setProducts] = useState([
-    {
-      id: '1',
-      title: 'Assinatura Trimestral',
-      image_url:
-      "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-      quantity: 1,
-      price: 150,
-    },
-    {
-      id: '2',
-      title: 'Assinatura Trimestral',
-      image_url:
-      "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-      quantity: 1,
-      price: 150,
-    },
-    {
-      id: '3',
-      title: 'Assinatura Trimestral',
-      image_url:
-      "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-      quantity: 1,
-      price: 150,
-    },
-    {
-      id: '4',
-      title: 'Assinatura Trimestral',
-      image_url:
-      "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-      quantity: 1,
-      price: 150,
-    },
-  ]);
+  const dispatch = useDispatch();
+
+  const products = useSelector(({ cart }) => cart);
+
+
+  const cartSize = useMemo(() => {
+    return products.length || 0;
+  }, [products]);
+
+  const cartTotal = useMemo(() => {
+    const cartAmount = products.reduce((accumulator, product) => {
+      const totalPrice = accumulator + product.price * product.amount;
+      return totalPrice;
+    }, 0);
+
+    return formatValue(cartAmount);
+  }, [products]);
+
+  function increment(product) {
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount + 1));
+  }
+  function decrement(product) {
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount - 1));
+  }
+  function removeFromCart(id) {
+    dispatch(CartActions.removeFromCart(id));
+  }
 
   return (
     <Container>
@@ -68,6 +65,7 @@ export default function Cart() {
         <ProductList
           data={products}
           keyExtractor={(item) => item.id}
+          ListEmptyComponent={<EmptyCart />}
           ListFooterComponent={<View />}
           ListFooterComponentStyle={{
             heigth: 80,
@@ -83,20 +81,24 @@ export default function Cart() {
                   </ProductSinglePrice>
 
                   <TotalContainer>
-                    <ProductQuantity>{`${item.quantity}x`} </ProductQuantity>
+                    <ProductQuantity>{`${item.amount}x`} </ProductQuantity>
 
                     <ProductPrice>
-                      {formatValue(item.price * item.quantity)}
+                      {formatValue(item.price * item.amount)}
                     </ProductPrice>
                   </TotalContainer>
 
                 </ProductPriceContainer>
               </ProductTitleContainer>
               <ActionContainer>
-                <ActionButton onPress={() => {}}>
+                <ActionButton onPress={() => increment(item)}>
                   <Feather name="plus" color="#e83f5b" size={16} />
                 </ActionButton>
-                <ActionButton onPress={() => {}}>
+                <ActionButton
+                  onPress={() =>
+                    item.amount > 1 ? decrement(item) : removeFromCart(item.id)
+                  }
+                >
                   <Feather name="minus" color="#e83f5b" size={16} />
                 </ActionButton>
               </ActionContainer>
@@ -104,6 +106,13 @@ export default function Cart() {
           )}
         />
       </ProductContainer>
+      <TotalProductContainer>
+        <Feather name="shopping-cart" color="#fff" size={24} />
+        <TotalProductsText>
+          {cartSize}{cartSize === 1 ? ' item' : ' itens'}
+        </TotalProductsText>
+        <SubTotalValue>{cartTotal} </SubTotalValue>
+      </TotalProductContainer>
     </Container>
   )
 }

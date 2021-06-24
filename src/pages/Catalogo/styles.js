@@ -22,22 +22,22 @@ export const ProductList = styled(FlatList).attrs({
 
 export const Product = styled.View`
 flex: 1;
-margin: 8px;
+margin: 4px;
 background: #626878;
-padding: 32px 12px;
+padding: 32px 2px;
 border-radius: 25px;
 `;
 
 export const ProductImage = styled.Image`
-width: 90%;
-height: 220px;
+width: 100%;
+height: 180px;
 align-self: center;
 `;
 
 export const ProductTitle = styled.Text`
 color: #b9c0d2;
 font-size: 22px;
-margin-top: 10px;
+margin-top: 2px;
 font-weight: 400;
 line-height: 40px;
 letter-spacing: 3.5px;
@@ -48,7 +48,6 @@ export const PriceContainer = styled.View`
 flex-direction: row;
 align-items: center;
 justify-content: space-between;
-margin-top: auto;
 padding: 24px 32px 4px;
 `;
 

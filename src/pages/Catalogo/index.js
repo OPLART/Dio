@@ -1,11 +1,14 @@
-import 'react-native-gesture-handler';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
+import { useDispatch } from 'react-redux';
+
+import * as CartActions from '../../store/modules/cart/actions';
 
 import FloatingCart from '../../components/FloatingCart'
 import Feather from 'react-native-vector-icons/Feather'
 
 import formatValue from '../../utils/formatValue';
+import api from '../../services/api'
 
 import {
   Container,
@@ -22,29 +25,23 @@ import {
 
 export default function Catalago() {
 
-  const [products, setProducts] = useState([
-    {
-      id: '1',
-      title: 'Assinatura Trimestral',
-      image_url:
-      "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-      price: 150,
-    },
-    {
-      id: '2',
-      title: 'Assinatura Trimestral',
-      image_url:
-      "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-      price: 150,
-    },
-    {
-      id: '3',
-      title: 'Assinatura Trimestral',
-      image_url:
-      "https://res.cloudinary.com/robertosousa1/image/upload/v1594492578/dio/quarterly_subscription_yjolpc.png",
-      price: 150,
-    },
-  ]);
+  const dispatch = useDispatch();
+
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    async function loadProducts() {
+      const { data } = await api.get('/products');
+
+      setProducts(data);
+    }
+    loadProducts();
+
+  }, []);
+
+  function handleAddToCart(id) {
+    dispatch(CartActions.addToCartRequest(id));
+  }
 
   return (
     <Container>
@@ -62,7 +59,7 @@ export default function Catalago() {
               <ProductTitle>{item.title}</ProductTitle>
               <PriceContainer>
                 <ProductPrice>{formatValue(item.price)} </ProductPrice>
-                <ProductButton onPress={() => { }}>
+                <ProductButton onPress={() => handleAddToCart(item.id)}>
                   <ProductButtonText>adicionar</ProductButtonText>
                   <Feather size={30} name="plus-circle" color="#d1d7e9" />
                 </ProductButton>
